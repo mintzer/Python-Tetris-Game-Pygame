@@ -1,5 +1,5 @@
 from colors import Colors
-import pygame
+import pygame_ce as pygame
 from position import Position
 
 class Block:
