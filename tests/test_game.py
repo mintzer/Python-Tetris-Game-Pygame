@@ -83,3 +83,40 @@ def test_get_random_block_all_7_types():
         block = game.get_random_block()
         drawn_types.add(type(block))
     assert drawn_types == ALL_BLOCK_TYPES
+
+
+def test_lock_block_writes_cells_to_grid():
+    game = Game()
+    block = game.current_block
+    block_id = block.id
+    positions = block.get_cell_positions()
+    game.lock_block()
+    for pos in positions:
+        assert game.grid.grid[pos.row][pos.column] == block_id
+
+
+def test_lock_block_advances_current_block():
+    game = Game()
+    old_next = game.next_block
+    game.lock_block()
+    assert game.current_block is old_next
+
+
+def test_lock_block_clears_full_row_and_updates_score():
+    game = Game()
+    # Fill row 19 (bottom) — all blocks start in rows 0-3 so no overlap
+    for col in range(game.grid.num_cols):
+        game.grid.grid[19][col] = 1
+    old_score = game.score
+    game.lock_block()
+    assert game.score > old_score
+
+
+def test_lock_block_sets_game_over_when_grid_full():
+    game = Game()
+    # Fill top rows so that whatever block becomes current can't fit
+    for row in range(4):
+        for col in range(game.grid.num_cols):
+            game.grid.grid[row][col] = 1
+    game.lock_block()
+    assert game.game_over is True
