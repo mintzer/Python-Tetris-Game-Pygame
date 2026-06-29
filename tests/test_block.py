@@ -72,3 +72,63 @@ def test_undo_rotation_wraps_around():
     block.undo_rotation()
     # Should wrap to the last valid state
     assert block.rotation_state == len(block.cells) - 1
+
+
+from blocks import JBlock, IBlock, OBlock, SBlock, TBlock, ZBlock
+
+
+def test_jblock_cell_layout() -> None:
+    block = JBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(0, 0), Position(1, 0), Position(1, 1), Position(1, 2)]
+    assert block.cells[1] == [Position(0, 1), Position(0, 2), Position(1, 1), Position(2, 1)]
+    assert block.cells[2] == [Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 2)]
+    assert block.cells[3] == [Position(0, 1), Position(1, 1), Position(2, 0), Position(2, 1)]
+
+
+def test_iblock_cell_layout() -> None:
+    block = IBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(1, 0), Position(1, 1), Position(1, 2), Position(1, 3)]
+    assert block.cells[1] == [Position(0, 2), Position(1, 2), Position(2, 2), Position(3, 2)]
+    assert block.cells[2] == [Position(2, 0), Position(2, 1), Position(2, 2), Position(2, 3)]
+    assert block.cells[3] == [Position(0, 1), Position(1, 1), Position(2, 1), Position(3, 1)]
+
+
+def test_oblock_cell_layout() -> None:
+    block = OBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(0, 0), Position(0, 1), Position(1, 0), Position(1, 1)]
+
+
+def test_sblock_cell_layout() -> None:
+    block = SBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(0, 1), Position(0, 2), Position(1, 0), Position(1, 1)]
+    assert block.cells[1] == [Position(0, 1), Position(1, 1), Position(1, 2), Position(2, 2)]
+    assert block.cells[2] == [Position(1, 1), Position(1, 2), Position(2, 0), Position(2, 1)]
+    assert block.cells[3] == [Position(0, 0), Position(1, 0), Position(1, 1), Position(2, 1)]
+
+
+def test_tblock_cell_layout() -> None:
+    block = TBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(0, 1), Position(1, 0), Position(1, 1), Position(1, 2)]
+    assert block.cells[1] == [Position(0, 1), Position(1, 1), Position(1, 2), Position(2, 1)]
+    assert block.cells[2] == [Position(1, 0), Position(1, 1), Position(1, 2), Position(2, 1)]
+    assert block.cells[3] == [Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 1)]
+
+
+def test_zblock_cell_layout() -> None:
+    block = ZBlock()
+    block.row_offset = 0
+    block.column_offset = 0
+    assert block.cells[0] == [Position(0, 0), Position(0, 1), Position(1, 1), Position(1, 2)]
+    assert block.cells[1] == [Position(0, 2), Position(1, 1), Position(1, 2), Position(2, 1)]
+    assert block.cells[2] == [Position(1, 0), Position(1, 1), Position(2, 1), Position(2, 2)]
+    assert block.cells[3] == [Position(0, 1), Position(1, 0), Position(1, 1), Position(2, 0)]
