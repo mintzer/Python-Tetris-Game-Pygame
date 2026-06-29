@@ -49,7 +49,6 @@ def test_get_random_block_removes_from_bag():
     game = Game()
     # After __init__, two blocks have already been drawn (current_block and next_block).
     # Reset the bag to a full set of 7 to get a predictable starting count.
-    from blocks import IBlock, JBlock, LBlock, OBlock, SBlock, TBlock, ZBlock
     game.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
     game.get_random_block()
     assert len(game.blocks) == 6
