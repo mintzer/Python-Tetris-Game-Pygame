@@ -1,8 +1,3 @@
-import sys
-import os
-
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
-
 # conftest.py has already patched pygame.mixer before this import
 from game import Game
 from blocks import IBlock, JBlock, LBlock, OBlock, SBlock, TBlock, ZBlock
