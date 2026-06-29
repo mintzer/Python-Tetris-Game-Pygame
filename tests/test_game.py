@@ -1,8 +1,13 @@
 # conftest.py has already patched pygame.mixer before this import
 from game import Game
+from block import Block
 from blocks import IBlock, JBlock, LBlock, OBlock, SBlock, TBlock, ZBlock
 
 ALL_BLOCK_TYPES = {IBlock, JBlock, LBlock, OBlock, SBlock, TBlock, ZBlock}
+
+
+def _fresh_bag() -> list[Block]:
+    return [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
 
 
 def test_initial_score_is_zero():
@@ -49,7 +54,7 @@ def test_get_random_block_removes_from_bag():
     game = Game()
     # After __init__, two blocks have already been drawn (current_block and next_block).
     # Reset the bag to a full set of 7 to get a predictable starting count.
-    game.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+    game.blocks = _fresh_bag()
     game.get_random_block()
     assert len(game.blocks) == 6
 
@@ -57,7 +62,7 @@ def test_get_random_block_removes_from_bag():
 def test_get_random_block_refills_bag():
     game = Game()
     # Drain all 7 blocks from a fresh bag
-    game.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+    game.blocks = _fresh_bag()
     for _ in range(7):
         game.get_random_block()
     # Bag is now empty; next call must refill and return a block
@@ -71,7 +76,7 @@ def test_get_random_block_refills_bag():
 def test_get_random_block_all_7_types():
     game = Game()
     # Start with a fresh, full bag
-    game.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+    game.blocks = _fresh_bag()
     drawn_types = set()
     for _ in range(7):
         block = game.get_random_block()

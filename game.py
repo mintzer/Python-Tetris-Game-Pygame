@@ -5,10 +5,14 @@ import random
 import pygame
 
 
+def _all_blocks() -> list[Block]:
+    return [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+
+
 class Game:
     def __init__(self) -> None:
         self.grid: Grid = Grid()
-        self.blocks: list[Block] = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+        self.blocks: list[Block] = _all_blocks()
         self.current_block: Block = self.get_random_block()
         self.next_block: Block = self.get_random_block()
         self.game_over: bool = False
@@ -30,7 +34,7 @@ class Game:
 
     def get_random_block(self) -> Block:
         if len(self.blocks) == 0:
-            self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+            self.blocks = _all_blocks()
         block = random.choice(self.blocks)
         self.blocks.remove(block)
         return block
@@ -66,7 +70,7 @@ class Game:
 
     def reset(self) -> None:
         self.grid.reset()
-        self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
+        self.blocks = _all_blocks()
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
         self.score = 0
