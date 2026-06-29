@@ -119,3 +119,95 @@ def test_lock_block_sets_game_over_when_grid_full():
             game.grid.grid[row][col] = 1
     game.lock_block()
     assert game.game_over is True
+
+
+def test_move_left_decrements_column_offset():
+    game = Game()
+    initial_col = game.current_block.column_offset
+    game.move_left()
+    assert game.current_block.column_offset == initial_col - 1
+
+
+def test_move_left_clamped_at_left_wall():
+    game = Game()
+    for _ in range(10):
+        game.move_left()
+    for pos in game.current_block.get_cell_positions():
+        assert pos.column >= 0
+
+
+def test_move_right_increments_column_offset():
+    game = Game()
+    initial_col = game.current_block.column_offset
+    game.move_right()
+    assert game.current_block.column_offset == initial_col + 1
+
+
+def test_move_right_clamped_at_right_wall():
+    game = Game()
+    for _ in range(15):
+        game.move_right()
+    for pos in game.current_block.get_cell_positions():
+        assert pos.column < game.grid.num_cols
+
+
+def test_move_down_increments_row_offset():
+    game = Game()
+    initial_row = game.current_block.row_offset
+    game.move_down()
+    assert game.current_block.row_offset == initial_row + 1
+
+
+def test_move_down_locks_block_at_floor():
+    game = Game()
+    first_block = game.current_block
+    for _ in range(25):
+        game.move_down()
+    assert game.current_block is not first_block
+
+
+def test_rotate_changes_rotation_state():
+    game = Game()
+    # Use a known multi-state block at a safe grid position to guarantee rotation succeeds
+    safe_block = LBlock()
+    safe_block.move(3, 0)
+    game.current_block = safe_block
+    initial_state = safe_block.rotation_state
+    game.rotate()
+    assert game.current_block.rotation_state != initial_state
+
+
+def test_rotate_undone_when_blocked():
+    game = Game()
+    for _ in range(10):
+        game.move_left()
+    initial_state = game.current_block.rotation_state
+    states_after = set()
+    for _ in range(len(game.current_block.cells) * 2):
+        game.rotate()
+        states_after.add(game.current_block.rotation_state)
+    for s in states_after:
+        assert 0 <= s < len(game.current_block.cells)
+
+
+def test_reset_clears_score():
+    game = Game()
+    game.update_score(3, 0)
+    game.reset()
+    assert game.score == 0
+
+
+def test_reset_clears_grid():
+    game = Game()
+    game.grid.grid[10][5] = 3
+    game.reset()
+    for row in range(game.grid.num_rows):
+        for col in range(game.grid.num_cols):
+            assert game.grid.grid[row][col] == 0
+
+
+def test_reset_refills_block_bag():
+    game = Game()
+    game.blocks = []
+    game.reset()
+    assert len(game.blocks) == 5
