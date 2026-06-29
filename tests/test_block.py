@@ -1,32 +1,34 @@
+import pytest
+
 from blocks import LBlock
 from position import Position
 
 
-def test_move_updates_offsets():
+@pytest.fixture()
+def zeroed_lblock() -> LBlock:
     block = LBlock()
-    # LBlock.__init__ calls move(0, 3) so reset offsets first
     block.row_offset = 0
     block.column_offset = 0
+    block.rotation_state = 0
+    return block
+
+
+def test_move_updates_offsets(zeroed_lblock: LBlock) -> None:
+    block = zeroed_lblock
     block.move(2, 3)
     assert block.row_offset == 2
     assert block.column_offset == 3
 
 
-def test_move_accumulates():
-    block = LBlock()
-    block.row_offset = 0
-    block.column_offset = 0
+def test_move_accumulates(zeroed_lblock: LBlock) -> None:
+    block = zeroed_lblock
     block.move(1, 0)
     block.move(2, 0)
     assert block.row_offset == 3
 
 
-def test_get_cell_positions_applies_offset():
-    block = LBlock()
-    # Reset to known zero offsets, then apply a single offset
-    block.row_offset = 0
-    block.column_offset = 0
-    block.rotation_state = 0
+def test_get_cell_positions_applies_offset(zeroed_lblock: LBlock) -> None:
+    block = zeroed_lblock
 
     # Get base positions (no offset)
     base_positions = [
