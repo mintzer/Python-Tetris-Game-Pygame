@@ -1,4 +1,7 @@
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
 class Position:
-	def __init__(self, row, column):
-		self.row = row
-		self.column = column
+    row: int
+    column: int
